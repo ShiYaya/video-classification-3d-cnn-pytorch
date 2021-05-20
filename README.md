@@ -4,18 +4,35 @@
 - 2D 预训练模型不需要提前下载，3D 需要提前下载[pretrained model](https://drive.google.com/drive/folders/1zvl89AgFAApbH0At-gMuZSeQB_LpNP-M?usp=sharing)
 并放在 pretrained_models 文件夹下，命名为resnext-101-kinetics.pth
 
-## 提取特征命令
 
+
+# 特征提取
+### appearence feature and motion feature
 - 提取appearence feature and motion feature:    
-  **单线程，for循环**： `video-classification-3d-cnn-pytorch\extract_feats_main.py`,    
-  **多线程**： `video-classification-3d-cnn-pytorch\multi_thread_extract_feats_main.py`  
+  **单线程，for循环**： `video-classification-3d-cnn-pytorch/extract_feats_main.py`,    
+  **多线程**： `video-classification-3d-cnn-pytorch/multi_thread_extract_feats_main.py`  
   该代码对一个video进行解帧，然后再调用 inceptionresnetv2 和 C3D的代码, 提取两个特征，然后把解的帧删除掉，再进行下一个video     
   
 - 单独提取 appearence feature:    
-  `video-classification-3d-cnn-pytorch\extract_fc_feats.py`    
+  `video-classification-3d-cnn-pytorch/extract_fc_feats.py`    
 
-- 单独 提取 C3D  feature:
-   `video-classification-3d-cnn-pytorch\extract_c3d_feats_main.py`  
+- 单独 提取 C3D  feature：
+   `video-classification-3d-cnn-pytorch/extract_c3d_feats_main.py`  
+
+
+### 解帧 
+- 专门解帧的一个代码：    
+  vatex trainval 解帧: `video-classification-3d-cnn-pytorch/extract_frames/original_video_jdg_kinetics.py`  
+  vatex public test 解帧：`video-classification-3d-cnn-pytorch/extract_frames/original_video_jdg_vatex_public.py`  
+  
+- 均匀采样，一个video 提取 28帧（采样方式保持与 c3d 代码中的采样方式一致)    
+  (这里采样 28 帧主要是为 提取 object proposal 做准备 )  
+  msvd/vtt: `video-classification-3d-cnn-pytorch/extract_frames/preprocess_frame.py`
+  vatex: `video-classification-3d-cnn-pytorch/extract_frames/preprocess_frame_vatex.py`
+  vatex_public_test: `video-classification-3d-cnn-pytorch/extract_frames/preprocess_frame_vatex_public.py`
+
+
+
 
 ----------------------------
 # 以下为源代码的readme
