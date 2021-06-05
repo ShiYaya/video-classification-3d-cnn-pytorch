@@ -10,7 +10,7 @@ import os
 
 def parse_opts():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--dataset', default='vatex', type=str, help='which dataset to extract features')
+    parser.add_argument('--dataset', default='zhihu', type=str, help='which dataset to extract features')
     parser.add_argument('--video_root', default=None, type=str, help='Root path of input videos')
     parser.add_argument('--c3d_model_checkpoint', default='./pretrained_models/resnext-101-kinetics.pth', type=str, help='Model file path')
     parser.add_argument('--output_c2d', default=None, type=str, help='Output file path')
@@ -48,7 +48,9 @@ def parse_opts():
         opt.video_sort_lambda = lambda x: int(x.split('/')[-1][5:-4])
     elif opt.dataset == 'vatex':
         opt.video_root = '/home/Disk4T/zqzhang/shiyaya/dataset/VATEX/trainval_videos/**/*.mp4'
-
+    
+    elif opt.dataset == 'zhihu':
+        opt.video_root = './process_zhihu_videos/*.mp4'
 
     opt.tmp = os.path.join(opt.dataset, 'tmp')
 

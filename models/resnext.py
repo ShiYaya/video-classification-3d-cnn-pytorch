@@ -147,8 +147,8 @@ class ResNeXt(nn.Module):
         x = x.view(x.size(0), -1)
         if self.last_fc:
             x = self.fc(x)
-
-        return torch.mean(x, 2) # torch.Size([8, 512, 14, 14])
+        
+        return x
 
 def get_fine_tuning_parameters(model, ft_begin_index):
     if ft_begin_index == 0:
