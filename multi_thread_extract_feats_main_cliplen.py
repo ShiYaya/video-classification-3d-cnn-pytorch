@@ -11,7 +11,7 @@ import glob
 import time
 from tqdm import tqdm
 
-from opts import parse_opts
+from opts_by_cliplen import parse_opts
 from model import generate_C3D_model, generate_C2D_model
 from mean import get_mean
 from dataset import Video
@@ -20,8 +20,11 @@ from temporal_transforms import LoopPadding
 
 from multiprocessing.dummy import Pool as ThreadPool
 
+from moviepy.editor import VideoFileClip
+import math
 
-def extract_feature(opt, video_dir, C3D_model, load_image_fn, C2D_model, c2d_shape):
+
+def extract_feature(opt, video_dir, C3D_model, load_image_fn, C2D_model, c2d_shape, duration):
     assert opt.mode in ['score', 'feature']
     C, H, W = c2d_shape
 
@@ -30,6 +33,8 @@ def extract_feature(opt, video_dir, C3D_model, load_image_fn, C2D_model, c2d_sha
                                  ToTensor(),
                                  Normalize(opt.mean, [1, 1, 1])])
     temporal_transform = LoopPadding(opt.sample_duration)
+
+    opt.num_segments = duration/opt.clip_len
     data = Video(opt, video_dir, load_image_fn,
                  spatial_transform=spatial_transform,
                  temporal_transform=temporal_transform,
@@ -97,6 +102,7 @@ def main(video_path):
 
         start = time.time()
         # 截取帧
+        
         subprocess.call('mkdir {}'.format(current_video_tmp), shell=True)
         subprocess.call('ffmpeg -i "{}" {}/image_%05d.jpg'.format(video_path, current_video_tmp),
                         shell=True)
@@ -106,7 +112,8 @@ def main(video_path):
         if len(os.listdir(current_video_tmp)) >= 1:
             # 提取特征
             # extract_feature, get numpy data
-            c3d_features, c2d_features = extract_feature(opt, current_video_tmp, C3D_model, load_image_fn, C2D_model, c2d_shape)
+            duration = VideoFileClip(video_path).duration
+            c3d_features, c2d_features = extract_feature(opt, current_video_tmp, C3D_model, load_image_fn, C2D_model, c2d_shape, duration)
 
             # 保存特征到 npy 文件
             np.save(c3d_outfile, c3d_features)
@@ -164,7 +171,7 @@ if opt.verbose:
 all_videos_path = glob.glob(opt.video_root)
 # all_videos_path = sorted(all_videos_path, key=opt.video_sort_lambda)
 
-pool = ThreadPool(15)  # 创建10个容量的线程池并发执行
+pool = ThreadPool(8)  # 创建10个容量的线程池并发执行
 pool.map(main, tqdm(all_videos_path))  # pool.map同map用法
 pool.close()
 pool.join()
