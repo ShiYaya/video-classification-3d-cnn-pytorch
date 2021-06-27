@@ -34,7 +34,8 @@
 
 ## 按照 cliplen 来提取特征
 
-python multi_thread_extract_feats_main_cliplen.py --dataset msr-vtt --clip_len 1
+python multi_thread_extract_feats_main_cliplen.py --dataset msr-vtt --clip_len 1.0
+python extract_feats_main_cliplen.py --dataset vatex_trainval --clip_len 1.0
 
 ----------------------------
 # 以下为源代码的readme

@@ -1,5 +1,5 @@
 import os
-os.environ["CUDA_VISIBLE_DEVICES"] = "0"
+os.environ["CUDA_VISIBLE_DEVICES"] = "1"
 
 import sys
 import json
@@ -76,18 +76,12 @@ def main(video_path):
         if opt.dataset == 'vatex_trainval':
             class_name = video_path.split('/')[-2]
             video_name = video_path.split('/')[-1][:-4]
-            c3d_class_path = os.path.join(opt.output_c3d, class_name)
-            c2d_class_path = os.path.join(opt.output_c2d, class_name)
-            if not os.path.exists(c3d_class_path):
-                os.makedirs(c3d_class_path)
-            if not os.path.exists(c2d_class_path):
-                os.makedirs(c2d_class_path)
-            c3d_outfile = os.path.join(c3d_class_path, video_name + '.npz')
-            c2d_outfile = os.path.join(c2d_class_path, video_name + '.npz')
         else:
             video_name = video_path.split('/')[-1][:-4]
-            c3d_outfile = os.path.join(opt.output_c3d, video_name + '.npz')
-            c2d_outfile = os.path.join(opt.output_c2d, video_name + '.npz')
+
+
+        c3d_outfile = os.path.join(opt.output_c3d, video_name + '.npz')
+        c2d_outfile = os.path.join(opt.output_c2d, video_name + '.npz')
 
 
         # 暂时注释
@@ -135,49 +129,37 @@ def main(video_path):
     else:
         print('{} does not exist'.format(video_path))
 
-    # if os.path.exists(current_video_tmp):
-    #     subprocess.call('rm -rf {}'.format(current_video_tmp), shell=True)
-    #
+
+if __name__ == '__main__':
+
+
+    opt = parse_opts()
+    opt.mean = get_mean()
+    opt.arch = '{}-{}'.format(opt.c3d_model_name, opt.c3d_model_depth)
+    opt.sample_size = 112
+    opt.n_classes = 400
+
+
+    ## C3D Model
+    C3D_model = generate_C3D_model(opt)
+
+    C3D_model.eval()
+    if opt.verbose:
+        print(C3D_model)
+
+    ## C2D Model
+    load_image_fn, C2D_model, c2d_shape = generate_C2D_model(opt)
+    C2D_model.eval()
+    if opt.verbose:
+        print(C2D_model)
+
+    ## FFMPEG
+    ffmpeg_loglevel = 'quiet'
+    if opt.verbose:
+        ffmpeg_loglevel = 'info'
 
 
 
-
-opt = parse_opts()
-opt.mean = get_mean()
-opt.arch = '{}-{}'.format(opt.c3d_model_name, opt.c3d_model_depth)
-opt.sample_size = 112
-opt.n_classes = 400
-
-
-## C3D Model
-C3D_model = generate_C3D_model(opt)
-
-C3D_model.eval()
-if opt.verbose:
-    print(C3D_model)
-
-## C2D Model
-load_image_fn, C2D_model, c2d_shape = generate_C2D_model(opt)
-C2D_model.eval()
-if opt.verbose:
-    print(C2D_model)
-
-## FFMPEG
-ffmpeg_loglevel = 'quiet'
-if opt.verbose:
-    ffmpeg_loglevel = 'info'
-
-
-# if os.path.exists(opt.tmp):
-#     subprocess.call('rm -rf {}'.format(opt.tmp), shell=True)
-
-
-all_videos_path = glob.glob(opt.video_root)
-# all_videos_path = sorted(all_videos_path, key=opt.video_sort_lambda)
-
-pool = ThreadPool(4)  # 创建10个容量的线程池并发执行
-pool.map(main, tqdm(all_videos_path))  # pool.map同map用法
-pool.close()
-pool.join()
-
-# main(opt, C3D_model, load_image_fn, C2D_model, c2d_shape)
+    all_videos_path = glob.glob(opt.video_root)
+    for vid_path in tqdm(all_videos_path):
+        main(vid_path)
