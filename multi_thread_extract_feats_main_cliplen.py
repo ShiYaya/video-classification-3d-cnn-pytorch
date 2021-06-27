@@ -54,6 +54,8 @@ def extract_feature(opt, video_dir, C3D_model, load_image_fn, C2D_model, c2d_sha
         frames = frames_npy_data.to(opt.device)
         with torch.no_grad():
             c2d_outputs = C2D_model(frames).squeeze()
+            if len(c2d_outputs.shape) == 1:
+                c2d_outputs = c2d_outputs.unsqueeze(0)
 
 
         # 汇总
@@ -62,7 +64,6 @@ def extract_feature(opt, video_dir, C3D_model, load_image_fn, C2D_model, c2d_sha
 
     c3d_features = torch.cat(c3d_features)  # c3d feature of one video
     c2d_features = torch.cat(c2d_features)  # c3d feature of one video
-
 
     return c3d_features.cpu().numpy(), c2d_features.cpu().numpy()
 
@@ -105,7 +106,7 @@ def main(video_path):
         
         subprocess.call('mkdir {}'.format(current_video_tmp), shell=True)
         try:
-            subprocess.call('ffmpeg -listen_timeout 5 -timeout 5 -i "{}" {}/image_%05d.jpg'.format(video_path, current_video_tmp),
+            subprocess.call('ffmpeg -i "{}" {}/image_%05d.jpg'.format(video_path, current_video_tmp),
                             shell=True,
                             timeout=5)
         except:
@@ -122,7 +123,7 @@ def main(video_path):
             np.savez(c3d_outfile, features=c3d_features)
             np.savez(c2d_outfile, features=c2d_features)
         else:
-            failed_path = './' + opt.dataset + '/failed_videos.txt'
+            failed_path = './' + opt.dataset+'_cliplen{}'.format(opt.clip_len) + '/failed_videos.txt'
             with open(failed_path, 'a+') as file:
                 file.write(video_path + '\n')
 

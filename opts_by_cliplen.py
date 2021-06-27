@@ -10,7 +10,7 @@ import os
 
 def parse_opts():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--dataset', default='vatex_trainval', type=str, help='which dataset to extract features')
+    parser.add_argument('--dataset', default='msr-vtt', type=str, help='which dataset to extract features')
     parser.add_argument('--video_root', default=None, type=str, help='Root path of input videos')
     parser.add_argument('--c3d_model_checkpoint', default='./pretrained_models/resnext-101-kinetics.pth', type=str, help='Model file path')
     parser.add_argument('--output_c2d', default=None, type=str, help='Output file path')
@@ -34,7 +34,7 @@ def parse_opts():
     parser.add_argument('--num_segments', default=28, type=int, help='the number to sample frames and the num of segments to extract c3d features')
     parser.add_argument('--uniform_sampele', default=True, type=bool,
                         help='use uniform to sample center indices, if not, use continuity to sample')
-    parser.add_argument('--clip_len', default=1, type=float, help='how many seconds to extract 1 feature')
+    parser.add_argument('--clip_len', default=1.0, type=float, help='how many seconds to extract 1 feature')
     parser.add_argument('--gpu_id', default=0, type=int)
     parser.set_defaults(verbose=False)
 
