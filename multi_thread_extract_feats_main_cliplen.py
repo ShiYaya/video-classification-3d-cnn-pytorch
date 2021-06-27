@@ -72,7 +72,7 @@ def main(video_path):
 
     if os.path.exists(video_path):
         print(video_path)
-        if opt.dataset == 'vatex' and opt.vatex_split == 'trainval':
+        if opt.dataset == 'vatex_trainval':
             class_name = video_path.split('/')[-2]
             video_name = video_path.split('/')[-1][:-4]
             c3d_class_path = os.path.join(opt.output_c3d, class_name)
@@ -81,12 +81,12 @@ def main(video_path):
                 os.makedirs(c3d_class_path)
             if not os.path.exists(c2d_class_path):
                 os.makedirs(c2d_class_path)
-            c3d_outfile = os.path.join(c3d_class_path, video_name + '.npy')
-            c2d_outfile = os.path.join(c2d_class_path, video_name + '.npy')
+            c3d_outfile = os.path.join(c3d_class_path, video_name + '.npz')
+            c2d_outfile = os.path.join(c2d_class_path, video_name + '.npz')
         else:
             video_name = video_path.split('/')[-1][:-4]
-            c3d_outfile = os.path.join(opt.output_c3d, video_name + '.npy')
-            c2d_outfile = os.path.join(opt.output_c2d, video_name + '.npy')
+            c3d_outfile = os.path.join(opt.output_c3d, video_name + '.npz')
+            c2d_outfile = os.path.join(opt.output_c2d, video_name + '.npz')
 
 
         # 暂时注释
@@ -105,9 +105,9 @@ def main(video_path):
         
         subprocess.call('mkdir {}'.format(current_video_tmp), shell=True)
         try:
-            subprocess.call('ffmpeg -i "{}" {}/image_%05d.jpg'.format(video_path, current_video_tmp),
+            subprocess.call('ffmpeg -listen_timeout 5 -timeout 5 -i "{}" {}/image_%05d.jpg'.format(video_path, current_video_tmp),
                             shell=True,
-                            timeout=60)
+                            timeout=5)
         except:
             return
         # 这里给 "video_path" 加引号，是为了处理 vatex 中类的文件名有空格、括号的情况
