@@ -1,5 +1,5 @@
 import os
-os.environ["CUDA_VISIBLE_DEVICES"] = "1"
+# os.environ["CUDA_VISIBLE_DEVICES"] = "1"
 
 import sys
 import json
@@ -61,9 +61,13 @@ def extract_feature(opt, video_dir, C3D_model, load_image_fn, C2D_model, c2d_sha
         # 汇总
         c3d_features.append(c3d_outputs.cpu().data)
         c2d_features.append(c2d_outputs.cpu().data)
+   
+    try:
+        c3d_features = torch.cat(c3d_features)  # c3d feature of one video
+        c2d_features = torch.cat(c2d_features)  # c3d feature of one video
+    except:
+        return None, None
 
-    c3d_features = torch.cat(c3d_features)  # c3d feature of one video
-    c2d_features = torch.cat(c2d_features)  # c3d feature of one video
 
     return c3d_features.cpu().numpy(), c2d_features.cpu().numpy()
 
@@ -112,10 +116,14 @@ def main(video_path):
             # extract_feature, get numpy data
             duration = VideoFileClip(video_path).duration
             c3d_features, c2d_features = extract_feature(opt, current_video_tmp, C3D_model, load_image_fn, C2D_model, c2d_shape, duration)
-
-            # 保存特征到 npy 文件
-            np.savez(c3d_outfile, features=c3d_features)
-            np.savez(c2d_outfile, features=c2d_features)
+            if c3d_features != None and c2d_features != None:
+                # 保存特征到 npy 文件
+                np.savez(c3d_outfile, features=c3d_features)
+                np.savez(c2d_outfile, features=c2d_features)
+            else:
+                failed_path = './' + opt.dataset+'_cliplen{}'.format(opt.clip_len) + '/failed_videos.txt'
+                with open(failed_path, 'a+') as file:
+                    file.write(video_path + '\n')
         else:
             failed_path = './' + opt.dataset+'_cliplen{}'.format(opt.clip_len) + '/failed_videos.txt'
             with open(failed_path, 'a+') as file:
@@ -161,5 +169,5 @@ if __name__ == '__main__':
 
 
     all_videos_path = glob.glob(opt.video_root)
-    for vid_path in tqdm(all_videos_path):
+    for vid_path in tqdm(all_videos_path[10000:20000]):
         main(vid_path)
