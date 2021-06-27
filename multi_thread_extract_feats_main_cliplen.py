@@ -112,7 +112,6 @@ def main(video_path):
             return
         # 这里给 "video_path" 加引号，是为了处理 vatex 中类的文件名有空格、括号的情况
 
-
         if len(os.listdir(current_video_tmp)) >= 1:
             # 提取特征
             # extract_feature, get numpy data
