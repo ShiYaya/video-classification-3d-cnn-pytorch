@@ -7,6 +7,7 @@ import torch
 from torch import nn
 import glob
 import time
+from tqdm import tqdm
 
 from opts import parse_opts
 from model import generate_C3D_model, generate_C2D_model
@@ -161,8 +162,8 @@ if opt.verbose:
 all_videos_path = glob.glob(opt.video_root)
 # all_videos_path = sorted(all_videos_path, key=opt.video_sort_lambda)
 
-pool = ThreadPool(2)  # 创建10个容量的线程池并发执行
-pool.map(main, all_videos_path)  # pool.map同map用法
+pool = ThreadPool(5)  # 创建10个容量的线程池并发执行
+pool.map(main, tqdm(all_videos_path))  # pool.map同map用法
 pool.close()
 pool.join()
 

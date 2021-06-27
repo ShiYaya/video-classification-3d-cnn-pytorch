@@ -1,4 +1,6 @@
 import os
+os.environ["CUDA_VISIBLE_DEVICES"] = '6'
+
 import sys
 import json
 import subprocess
@@ -33,6 +35,8 @@ def extract_feature(opt, video_dir, C3D_model):
 
     c3d_features = []
     for i, clip in enumerate(data_loader):
+
+        print(clip.mean())
 
         ## c3d feats
         clip = clip.to(opt.device)

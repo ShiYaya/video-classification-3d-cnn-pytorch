@@ -10,7 +10,7 @@ import os
 
 def parse_opts():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--dataset', default='zhihu', type=str, help='which dataset to extract features')
+    parser.add_argument('--dataset', default='msvd', type=str, help='which dataset to extract features')
     parser.add_argument('--video_root', default=None, type=str, help='Root path of input videos')
     parser.add_argument('--c3d_model_checkpoint', default='./pretrained_models/resnext-101-kinetics.pth', type=str, help='Model file path')
     parser.add_argument('--output_c2d', default=None, type=str, help='Output file path')
@@ -41,7 +41,7 @@ def parse_opts():
     opt = parser.parse_args()
 
     if opt.dataset == 'msvd':
-        opt.video_root = '/userhome/dataset/MSVD/Video-Description-with-Spatial-Temporal-Attention/youtube/*.avi'
+        opt.video_root = '/home/yyshi/dataset/msvd/youtube/*.avi'
         opt.video_sort_lambda = lambda x: int(x.split('/')[-1][3:-4])
     elif opt.dataset == 'msr-vtt':
         opt.video_root = '/home/Disk4T/zqzhang/shiyaya/dataset/MSR-VTT/train-video/*.mp4'

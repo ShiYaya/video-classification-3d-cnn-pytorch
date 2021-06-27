@@ -2,3 +2,7 @@ pretrained_models/*
 process_zhihu_videos/*
 zhihu_videos/*
 zhihu/*
+
+*.npy
+*.jpg
+*.pyc
