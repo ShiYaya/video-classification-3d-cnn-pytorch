@@ -34,7 +34,7 @@ def extract_feature(opt, video_dir, C3D_model, load_image_fn, C2D_model, c2d_sha
                                  Normalize(opt.mean, [1, 1, 1])])
     temporal_transform = LoopPadding(opt.sample_duration)
 
-    opt.num_segments = duration/opt.clip_len
+    opt.num_segments = int(duration/opt.clip_len)
     data = Video(opt, video_dir, load_image_fn,
                  spatial_transform=spatial_transform,
                  temporal_transform=temporal_transform,
@@ -104,8 +104,12 @@ def main(video_path):
         # 截取帧
         
         subprocess.call('mkdir {}'.format(current_video_tmp), shell=True)
-        subprocess.call('ffmpeg -i "{}" {}/image_%05d.jpg'.format(video_path, current_video_tmp),
-                        shell=True)
+        try:
+            subprocess.call('ffmpeg -i "{}" {}/image_%05d.jpg'.format(video_path, current_video_tmp),
+                            shell=True,
+                            timeout=60)
+        except:
+            return
         # 这里给 "video_path" 加引号，是为了处理 vatex 中类的文件名有空格、括号的情况
 
 
@@ -116,8 +120,8 @@ def main(video_path):
             c3d_features, c2d_features = extract_feature(opt, current_video_tmp, C3D_model, load_image_fn, C2D_model, c2d_shape, duration)
 
             # 保存特征到 npy 文件
-            np.save(c3d_outfile, c3d_features)
-            np.save(c2d_outfile, c2d_features)
+            np.savez(c3d_outfile, features=c3d_features)
+            np.savez(c2d_outfile, features=c2d_features)
         else:
             failed_path = './' + opt.dataset + '/failed_videos.txt'
             with open(failed_path, 'a+') as file:
@@ -171,7 +175,7 @@ if opt.verbose:
 all_videos_path = glob.glob(opt.video_root)
 # all_videos_path = sorted(all_videos_path, key=opt.video_sort_lambda)
 
-pool = ThreadPool(8)  # 创建10个容量的线程池并发执行
+pool = ThreadPool(4)  # 创建10个容量的线程池并发执行
 pool.map(main, tqdm(all_videos_path))  # pool.map同map用法
 pool.close()
 pool.join()

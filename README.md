@@ -32,7 +32,9 @@
   vatex_public_test: `video-classification-3d-cnn-pytorch/extract_frames/preprocess_frame_vatex_public.py`
 
 
+## 按照 cliplen 来提取特征
 
+python multi_thread_extract_feats_main_cliplen.py --dataset msr-vtt --clip_len 1
 
 ----------------------------
 # 以下为源代码的readme

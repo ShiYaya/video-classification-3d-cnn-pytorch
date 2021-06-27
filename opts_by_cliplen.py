@@ -10,7 +10,7 @@ import os
 
 def parse_opts():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--dataset', default='msvd', type=str, help='which dataset to extract features')
+    parser.add_argument('--dataset', default='vatex_trainval', type=str, help='which dataset to extract features')
     parser.add_argument('--video_root', default=None, type=str, help='Root path of input videos')
     parser.add_argument('--c3d_model_checkpoint', default='./pretrained_models/resnext-101-kinetics.pth', type=str, help='Model file path')
     parser.add_argument('--output_c2d', default=None, type=str, help='Output file path')
@@ -44,21 +44,19 @@ def parse_opts():
         opt.video_root = '/home/yyshi/dataset/msvd/youtube/*.avi'
         opt.video_sort_lambda = lambda x: int(x.split('/')[-1][3:-4])
     elif opt.dataset == 'msr-vtt':
-        opt.video_root = '/home/Disk4T/zqzhang/shiyaya/dataset/MSR-VTT/train-video/*.mp4'
+        opt.video_root = '/home/yyshi/dataset/msr-vtt/TrainValTestVideo/*.mp4'
         opt.video_sort_lambda = lambda x: int(x.split('/')[-1][5:-4])
-    elif opt.dataset == 'vatex':
-        opt.video_root = '/home/Disk4T/zqzhang/shiyaya/dataset/VATEX/trainval_videos/**/*.mp4'
+    elif opt.dataset == 'vatex_trainval':
+        opt.video_root = '/data/yyshi/dataset/vatex/trainval_videos/**/*.mp4'
     
-    elif opt.dataset == 'zhihu':
-        opt.video_root = './process_zhihu_videos/*.mp4'
 
-    opt.tmp = os.path.join(opt.dataset, 'tmp')
+    opt.tmp = os.path.join(opt.dataset+'_cliplen{}'.format(opt.clip_len), 'tmp')
 
-    opt.output_c3d = os.path.join('./', opt.dataset, 'c3d_feats')
+    opt.output_c3d = os.path.join('./', opt.dataset+'_cliplen{}'.format(opt.clip_len), 'c3d_feats')
     if not os.path.exists(opt.output_c3d):
         os.makedirs(opt.output_c3d)
 
-    opt.output_c2d = os.path.join('./', opt.dataset, 'c2d_feats')
+    opt.output_c2d = os.path.join('./', opt.dataset+'_cliplen{}'.format(opt.clip_len), 'c2d_feats')
     if not os.path.exists(opt.output_c2d):
         os.makedirs(opt.output_c2d)
 

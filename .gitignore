@@ -6,3 +6,4 @@ zhihu/*
 *.npy
 *.jpg
 *.pyc
+*.npz
