@@ -34,7 +34,14 @@
 
 ## 按照 cliplen 来提取特征
 
+<<<<<<< HEAD
 python extract_feats_main_cliplen.py --dataset msr-vtt --clip_len 1.0
+=======
+python multi_thread_extract_feats_main_cliplen.py --dataset msr-vtt --clip_len 1.0
+CUDA_VISIBLE_DEVICES="0" python extract_feats_main_cliplen_vatex1.py --dataset vatex_trainval --clip_len 1.0
+CUDA_VISIBLE_DEVICES="0" python extract_feats_main_cliplen_vatex2.py --dataset vatex_trainval --clip_len 1.0
+CUDA_VISIBLE_DEVICES="0" python extract_feats_main_cliplen_vatex3.py --dataset vatex_trainval --clip_len 1.0
+>>>>>>> 3531ae1ba6b55bf3b59d6f9cd51f87c94dd83949
 
 ----------------------------
 # 以下为源代码的readme
