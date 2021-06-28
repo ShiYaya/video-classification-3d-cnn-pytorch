@@ -52,24 +52,16 @@ def parse_opts():
     elif opt.dataset == 'vatex_publictest':
         opt.video_root = '/data11/video/vatex/public_test_videos/*.mp4'
     
-    # opt.tmp = os.path.join(opt.dataset+'_cliplen{}'.format(opt.clip_len), 'tmp')
+    opt.tmp = os.path.join(opt.dataset+'_cliplen{}'.format(opt.clip_len), 'tmp')
 
-    # opt.output_c3d = os.path.join('./', opt.dataset+'_cliplen{}'.format(opt.clip_len), 'c3d_feats')
-    # if not os.path.exists(opt.output_c3d):
-    #     os.makedirs(opt.output_c3d)
-
-    # opt.output_c2d = os.path.join('./', opt.dataset+'_cliplen{}'.format(opt.clip_len), 'c2d_feats')
-    # if not os.path.exists(opt.output_c2d):
-    #     os.makedirs(opt.output_c2d)
-    opt.tmp = os.path.join('vatex_trainval'+'_cliplen{}'.format(opt.clip_len), 'tmp')
-
-    opt.output_c3d = os.path.join('./', 'vatex_trainval'+'_cliplen{}'.format(opt.clip_len), 'c3d_feats')
+    opt.output_c3d = os.path.join('./', opt.dataset+'_cliplen{}'.format(opt.clip_len), 'c3d_feats')
     if not os.path.exists(opt.output_c3d):
         os.makedirs(opt.output_c3d)
 
-    opt.output_c2d = os.path.join('./', 'vatex_trainval'+'_cliplen{}'.format(opt.clip_len), 'c2d_feats')
+    opt.output_c2d = os.path.join('./', opt.dataset+'_cliplen{}'.format(opt.clip_len), 'c2d_feats')
     if not os.path.exists(opt.output_c2d):
         os.makedirs(opt.output_c2d)
+
 
     opt.device = torch.device('cuda:'+str(opt.gpu_id) if torch.cuda.is_available() else 'cpu')
 
