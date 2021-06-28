@@ -168,5 +168,5 @@ if __name__ == '__main__':
 
 
     all_videos_path = glob.glob(opt.video_root)
-    for vid_path in tqdm(all_videos_path[25000:]):
+    for vid_path in tqdm(all_videos_path):
         main(vid_path)
