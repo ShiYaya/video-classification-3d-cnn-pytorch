@@ -49,7 +49,7 @@ def parse_opts():
     elif opt.dataset == 'vatex_trainval':
         opt.video_root = '/data/yyshi/dataset/vatex/trainval_videos/**/*.mp4'
     elif opt.dataset == 'vatex_publictest':
-        opt.video_root = '/data/yyshi/dataset/vatex/public_test_videos/*.mp4'
+        opt.video_root = '/home/yyshi/dataset/vatex/public_test_videos/*.mp4'
     
 
     opt.tmp = os.path.join(opt.dataset+'_cliplen{}'.format(opt.clip_len), 'tmp')
