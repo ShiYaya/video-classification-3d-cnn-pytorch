@@ -116,7 +116,7 @@ def make_uniform_dataset(opt, video_path):
     print('-------------------------')
 
     last_frame = sorted(glob.glob(video_path + '/*.jpg'), key=lambda x: int(x[-9:-4]))[-1]
-    while n_frames < opt.num_segments:
+    while n_frames < opt.num_segments or n_frames < opt.sample_duration:
         n_frames += 1
         pad_frame = last_frame[:-9] + '%05d.jpg' % n_frames
         cmd = 'cp -r "{}" "{}"'.format(last_frame, pad_frame)
