@@ -109,6 +109,11 @@ def make_uniform_dataset(opt, video_path):
     dataset = []
 
     n_frames = len(os.listdir(video_path))
+    print('--------')
+    print(video_path)
+    print(n_frames)
+    print(opt.num_segments)
+    print('-------------------------')
 
     last_frame = sorted(glob.glob(video_path + '/*.jpg'), key=lambda x: int(x[-9:-4]))[-1]
     while n_frames < opt.num_segments:
@@ -117,8 +122,6 @@ def make_uniform_dataset(opt, video_path):
         cmd = 'cp -r "{}" "{}"'.format(last_frame, pad_frame)
         print(cmd)
         subprocess.call('cp -r "{}" "{}"'.format(last_frame, pad_frame), shell=True)
-
-
 
     indices = np.linspace(9, n_frames+1 - 7, opt.num_segments, endpoint=False, dtype=int)
     # indices 存放的是 center indices of each segments
