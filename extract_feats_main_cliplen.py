@@ -34,7 +34,7 @@ def extract_feature(opt, video_dir, C3D_model, load_image_fn, C2D_model, c2d_sha
                                  Normalize(opt.mean, [1, 1, 1])])
     temporal_transform = LoopPadding(opt.sample_duration)
 
-    opt.num_segments = int(duration/opt.clip_len)
+    opt.num_segments = max(int(duration/opt.clip_len), 1)
     data = Video(opt, video_dir, load_image_fn,
                  spatial_transform=spatial_transform,
                  temporal_transform=temporal_transform,
