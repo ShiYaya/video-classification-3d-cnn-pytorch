@@ -116,11 +116,10 @@ def main(video_path):
             # extract_feature, get numpy data
             duration = VideoFileClip(video_path).duration
             c3d_features, c2d_features = extract_feature(opt, current_video_tmp, C3D_model, load_image_fn, C2D_model, c2d_shape, duration)
-            if c3d_features != None and c2d_features != None:
-                # 保存特征到 npy 文件
+            try:
                 np.savez(c3d_outfile, features=c3d_features)
                 np.savez(c2d_outfile, features=c2d_features)
-            else:
+            except:
                 failed_path = './' + opt.dataset+'_cliplen{}'.format(opt.clip_len) + '/failed_videos.txt'
                 with open(failed_path, 'a+') as file:
                     file.write(video_path + '\n')
