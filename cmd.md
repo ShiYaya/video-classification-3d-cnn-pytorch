@@ -18,5 +18,5 @@ CUDA_VISIBLE_DEVICES="1" python extract_feats_main_cliplen_vatex2.py --dataset v
 
 
 
-CUDA_VISIBLE_DEVICES="0" python extract_feats_main_cliplen.py --dataset msrvtt --clip_len 0.5
+CUDA_VISIBLE_DEVICES="7" python extract_feats_main_cliplen_2.py --dataset msr-vtt --clip_len 0.5
 

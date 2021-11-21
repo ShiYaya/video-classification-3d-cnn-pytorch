@@ -44,7 +44,7 @@ def parse_opts():
         opt.video_root = '/home/yyshi/dataset/msvd/youtube/*.avi'
         opt.video_sort_lambda = lambda x: int(x.split('/')[-1][3:-4])
     elif opt.dataset == 'msr-vtt':
-        opt.video_root = '/data1/shiyaya/datasets/msr-vtt/TrainValTestVideo/*.mp4'
+        opt.video_root = '/home/yyshi/dataset/msr-vtt/TrainValTestVideo/*.mp4'
         opt.video_sort_lambda = lambda x: int(x.split('/')[-1][5:-4])
     elif opt.dataset == 'vatex_trainval':
         opt.video_root = '/data11/video/vatex/trainval_videos/**/*.mp4'

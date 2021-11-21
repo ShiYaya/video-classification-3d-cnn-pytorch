@@ -40,7 +40,7 @@ def extract_feature(opt, video_dir, C3D_model, load_image_fn, C2D_model, c2d_sha
                  temporal_transform=temporal_transform,
                  sample_duration=opt.sample_duration)
     data_loader = torch.utils.data.DataLoader(data, batch_size=opt.batch_size,
-                                              shuffle=False, num_workers=opt.n_threads, pin_memory=True)
+                                              shuffle=False, num_workers=0, pin_memory=True)
 
     c3d_features = []
     c2d_features = []
@@ -168,5 +168,5 @@ if __name__ == '__main__':
 
 
     all_videos_path = glob.glob(opt.video_root)
-    for vid_path in tqdm(all_videos_path[24000:]):
+    for vid_path in tqdm(all_videos_path[5500:]):
         main(vid_path)
